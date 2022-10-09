@@ -12,4 +12,4 @@ void writeSeries(ofstream& receiver, ifstream& source);
 void sort();
 bool moreThanOneNotEmpty();
 void mergingFiles(vector<ofstream>& receiver, vector<ifstream>& source, bool direction);
-
+bool checkOrder();

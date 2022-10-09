@@ -154,7 +154,7 @@ void mergingFiles(vector<ofstream>& receiver, vector<ifstream>& source, bool dir
 	{
 		recieverNum++;
 		recieverNum %= 4;
-		while (true)
+		do
 		{
 			long smaller = numeric_limits<long>::max();
 			int indexSmaller = -1;
@@ -170,9 +170,7 @@ void mergingFiles(vector<ofstream>& receiver, vector<ifstream>& source, bool dir
 			}
 			receiver[recieverNum] << " " << smaller;
 			getNum(indexSmaller);
-			if (checkEnd())
-				break;
-		}
+		} while (!checkEnd());
 		elements = vector<long>(4, numeric_limits<long>::min());
 		for (int i = 0; i < 4; i++)
 		{
@@ -186,4 +184,25 @@ void mergingFiles(vector<ofstream>& receiver, vector<ifstream>& source, bool dir
 		ofstream temp(srcName + to_string(i) + ".txt", ios::trunc);
 		temp.close();
 	}
+}
+
+bool checkOrder()
+{
+	ifstream in("B1.txt", ios::binary);
+	in.seekg(0, ios::beg);
+	long previous;
+	long current;
+	in >> previous;
+	bool flag = true;
+	while (!in.eof())
+	{
+		in >> current;
+		if (current < previous)
+		{
+			flag = false;
+			break;
+		}
+		previous = current;
+	}
+	return flag;
 }

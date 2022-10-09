@@ -7,7 +7,8 @@ using namespace std;
 
 int main()
 {
-	createFirstFiles("file2.txt");
+	createFirstFiles("file.txt");
 	sort();
+	cout << "Is order correct?: " << boolalpha << checkOrder();
 }
 
