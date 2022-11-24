@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <string>
 #include <set>
 
 using namespace std;
@@ -24,9 +25,10 @@ class Graph
 	void defineDegree(int verNum);
 public:
 	Graph(int degreeLimit = 20, int vertexAmount = 100);
-	vector<Vertex> getVertices();
+	vector<Vertex>& getVertices();
 	void generateRandGraph();
 	bool changeColour(int verNum, int colour);
-
+	void defineChromaticNum(int usedColors);
+	int getVertexAmount();
+	void showAdjMatrixAndColors();
 };
-

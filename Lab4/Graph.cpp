@@ -7,6 +7,8 @@ Graph::Vertex::Vertex(int number, int colour, int degree) : number(number), colo
 
 bool Graph::verifyColor(int& verNum, int& colour)
 {
+	if (colour == -1)
+		return true;
 	for (auto neighbour : vertices[verNum].neighbours)
 	{
 		if (vertices[neighbour].colour == colour)
@@ -36,11 +38,16 @@ Graph::Graph(int degreeLimit, int vertexAmount) : vertexAmount(vertexAmount), ch
 	if (degreeLimit >= vertexAmount)
 		degreeLimit = vertexAmount - 1;
 	this->degreeLimit = degreeLimit;
-	for (int i = 0; i < vertexAmount; i++)
+	if (this->degreeLimit == 0)
+	{
+		this->degreeLimit = 1;
+		this->vertexAmount = 2;
+	}
+	for (int i = 0; i < this->vertexAmount; i++)
 		vertices.emplace_back(Vertex(i));
 }
 
-vector<Graph::Vertex> Graph::getVertices()
+vector<Graph::Vertex>& Graph::getVertices()
 {
 	return vertices;
 }
@@ -69,4 +76,41 @@ bool Graph::changeColour(int verNum, int colour)
 	}
 	else
 		return false;
+}
+
+void Graph::defineChromaticNum(int usedColors)
+{
+	chromaticNum = usedColors;
+}
+
+int Graph::getVertexAmount()
+{
+	return vertexAmount;
+}
+
+void Graph::showAdjMatrixAndColors()
+{
+	string tableHeader = "        ";
+	for (int i = 0; i < vertexAmount; i++)
+	{
+		tableHeader += to_string(i) + "   ";
+	}
+	cout << tableHeader << endl;
+	for (int i = 0; i < vertexAmount; i++)
+	{
+		cout << "\n" << "   " << i << "|   ";
+		for (int j = 0; j < vertexAmount; j++)
+		{
+			if (vertices[i].neighbours.count(j) > 0)
+				cout << "1" << "   ";
+			else
+				cout << "0" << "   ";
+		}
+		cout << endl;
+	}
+	cout << endl << endl;
+	cout << "Colors:" << endl << tableHeader << "\n\n        ";
+	for (int i = 0; i < vertexAmount; i++)
+		cout << vertices[i].colour << "   ";
+	cout << endl << endl << endl;
 }
