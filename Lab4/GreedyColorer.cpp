@@ -25,5 +25,6 @@ int GreedyColorer::greedyColoring(Graph& graph)
 	if (graph.getVertexAmount() > 0)
 		traversalGraph(graph);
 	graph.defineChromaticNum(usedColors.size());
+	graph.getUsedColors() = GreedyColorer::usedColors;
 	return usedColors.size();
 }

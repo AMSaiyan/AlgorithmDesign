@@ -33,7 +33,11 @@ void Graph::defineDegree(int verNum)
 	vertices[verNum].degree = vertices[verNum].neighbours.size();
 }
 
-Graph::Graph(int degreeLimit, int vertexAmount) : vertexAmount(vertexAmount), chromaticNum(-1)
+Graph::Graph(int degreeLimit, int vertexAmount) : 
+	vertexAmount(vertexAmount), 
+	chromaticNum(-1), 
+	maxDegree(-1), 
+	usedColors(set<int>())
 {
 	if (degreeLimit >= vertexAmount)
 		degreeLimit = vertexAmount - 1;
@@ -52,6 +56,11 @@ vector<Graph::Vertex>& Graph::getVertices()
 	return vertices;
 }
 
+int Graph::getChromaticNum()
+{
+	return chromaticNum;
+}
+
 void Graph::generateRandGraph()
 {
 	for (int i = 0; i < vertexAmount; i++)
@@ -64,7 +73,16 @@ void Graph::generateRandGraph()
 		}
 	}
 	for (int i = 0; i < vertexAmount; i++)
+	{
 		defineDegree(i);
+		if (maxDegree < vertices[i].degree)
+			maxDegree = vertices[i].degree;
+	}
+	//auto comparator = [this](Vertex left, Vertex right) 
+	//{
+	//	return left.degree > right.degree;
+	//};
+	//sort(vertices.begin(), vertices.end(), comparator);
 }
 
 bool Graph::changeColour(int verNum, int colour)
@@ -80,7 +98,7 @@ bool Graph::changeColour(int verNum, int colour)
 
 void Graph::defineChromaticNum(int usedColors)
 {
-	chromaticNum = usedColors;
+	chromaticNum = usedColors; 
 }
 
 int Graph::getVertexAmount()
@@ -88,29 +106,19 @@ int Graph::getVertexAmount()
 	return vertexAmount;
 }
 
-void Graph::showAdjMatrixAndColors()
+int Graph::getMaxDegree()
 {
-	string tableHeader = "        ";
-	for (int i = 0; i < vertexAmount; i++)
-	{
-		tableHeader += to_string(i) + "   ";
-	}
-	cout << tableHeader << endl;
-	for (int i = 0; i < vertexAmount; i++)
-	{
-		cout << "\n" << "   " << i << "|   ";
-		for (int j = 0; j < vertexAmount; j++)
-		{
-			if (vertices[i].neighbours.count(j) > 0)
-				cout << "1" << "   ";
-			else
-				cout << "0" << "   ";
-		}
-		cout << endl;
-	}
-	cout << endl << endl;
-	cout << "Colors:" << endl << tableHeader << "\n\n        ";
-	for (int i = 0; i < vertexAmount; i++)
-		cout << vertices[i].colour << "   ";
-	cout << endl << endl << endl;
+	return maxDegree;
+}
+
+set<int>& Graph::getUsedColors()
+{
+	return usedColors;
+}
+
+void Graph::redefineUsedColors()
+{
+	usedColors.clear();
+	for (auto vertex : vertices)
+		usedColors.insert(vertex.colour);
 }

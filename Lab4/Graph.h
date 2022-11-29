@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -18,7 +19,9 @@ class Graph
 	};
 	int vertexAmount;
 	int degreeLimit;
+	int maxDegree;
 	int chromaticNum;
+	set<int> usedColors;
 	vector<Vertex> vertices;
 	bool verifyColor(int& verNum, int& colour);
 	void createEdge(int firstVer, int secondVer);
@@ -26,9 +29,12 @@ class Graph
 public:
 	Graph(int degreeLimit = 20, int vertexAmount = 100);
 	vector<Vertex>& getVertices();
+	int getChromaticNum();
 	void generateRandGraph();
 	bool changeColour(int verNum, int colour);
 	void defineChromaticNum(int usedColors);
 	int getVertexAmount();
-	void showAdjMatrixAndColors();
+	int getMaxDegree();
+	set<int>& getUsedColors();
+	void redefineUsedColors();
 };

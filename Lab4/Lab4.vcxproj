@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BeeSwarm.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GreedyColorer.cpp" />
     <ClCompile Include="Lab4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BeeSwarm.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GreedyColorer.h" />
   </ItemGroup>
