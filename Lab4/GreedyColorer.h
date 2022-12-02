@@ -8,5 +8,5 @@ class GreedyColorer
 	void traversalGraph(Graph& graph);
 public:
 	GreedyColorer();
-	int greedyColoring(Graph& graph);
+	Graph greedyColoring(Graph graph);
 };

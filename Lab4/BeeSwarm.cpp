@@ -1,27 +1,74 @@
 #include "BeeSwarm.h"
+#define startDistrictsAmount 20
 
-//void BeeSwarm::foragerCycle(int districtNum, int foragerAmount)
-//{
-//	auto trySwitchColors = [this, districtNum, foragerAmount](int vertexNum) 
-//	{
-//		int chosenVertexColor = districts[districtNum].getVertices()[vertexNum].colour;
-//		int neighbourColor;
-//		bool successChosen = false;
-//		bool successNeighbour = false;
-//		int neighbourSuccessIndex = -1;
-//		for (auto neighbour : districts[districtNum].getVertices()[vertexNum].neighbours)
-//		{
-//			neighbourColor = districts[districtNum].getVertices()[neighbour].colour;
-//			districts[districtNum].changeColour(neighbour, -1);
-//			successChosen = districts[districtNum].changeColour(vertexNum, neighbourColor);
-//			successNeighbour = districts[districtNum].changeColour(neighbour, chosenVertexColor);
-//			if (successChosen && successNeighbour)
-//			{
-//				neighbourSuccessIndex = neighbour;
-//			}
-//		}
-//	};
-//}
+void BeeSwarm::foragerCycle(int districtNum, int foragerAmount)
+{
+	int neighbourSuccessIndex = -1;
+	auto trySwitchColors = [this, districtNum, &neighbourSuccessIndex](int vertexNum)
+	{
+		int chosenVertexColor = districts[districtNum].getVertices()[vertexNum].colour;
+		int neighbourColor;
+		bool successChosen = false;
+		bool successNeighbour = false;
+		for (auto neighbour : districts[districtNum].getVertices()[vertexNum].neighbours)
+		{
+			neighbourColor = districts[districtNum].getVertices()[neighbour].colour;
+			districts[districtNum].changeColour(neighbour, -1);
+			successChosen = districts[districtNum].changeColour(vertexNum, neighbourColor);
+			successNeighbour = districts[districtNum].changeColour(neighbour, chosenVertexColor);
+			if (successChosen && successNeighbour)
+			{
+				neighbourSuccessIndex = neighbour;
+				break;
+			}
+			else
+			{
+				districts[districtNum].changeColour(neighbour, -1);
+				districts[districtNum].changeColour(neighbour, neighbourColor);
+				districts[districtNum].changeColour(vertexNum, -1);
+				districts[districtNum].changeColour(vertexNum, chosenVertexColor);
+			}
+		}
+	};
+	auto tryReduceColorAmount = [this, districtNum](int vertexNum, int neigbour)
+	{
+		for (auto color : districts[districtNum].getUsedColors())
+		{
+			if (districts[districtNum].changeColour(vertexNum, color)) 
+			{
+				districts[districtNum].redefineUsedColors();
+				break;
+			}
+		}
+		for (auto color : districts[districtNum].getUsedColors())
+		{
+			if (districts[districtNum].changeColour(neigbour, color))
+			{
+				districts[districtNum].redefineUsedColors();
+				break;
+			}
+		}
+	};
+	queue<int> chosenVertices;
+	for (int vertexDegree = districts[districtNum].getMaxDegree(); vertexDegree > 0 && foragerAmount > 0; vertexDegree--)
+	{
+		for (int i = 0; i < districts[districtNum].getDegree—onformity()[vertexDegree].size() && foragerAmount > 0; i++)
+		{
+			chosenVertices.push(districts[districtNum].getDegree—onformity()[vertexDegree][i]);
+			foragerAmount--;
+		}
+	}
+	while (!chosenVertices.empty())
+	{
+		trySwitchColors(chosenVertices.front());
+		if (neighbourSuccessIndex != -1)
+		{
+			tryReduceColorAmount(chosenVertices.front(), neighbourSuccessIndex);
+			neighbourSuccessIndex = -1;
+		}
+		chosenVertices.pop();
+	}
+}
 
 queue<Graph> BeeSwarm::scoutCycle()
 {
@@ -57,11 +104,17 @@ BeeSwarm::BeeSwarm(int iterationsLimit, int scouts, int foragers) :
 
 Graph BeeSwarm::colourGraph(Graph inputGraph)
 {
+	auto comparator = [](Graph left, Graph right)
+	{
+		return left.getChromaticNum() < right.getChromaticNum();
+	};
 	GreedyColorer greedy;
-	greedy.greedyColoring(inputGraph);
+	for (int i = 0; i < startDistrictsAmount; i++)
+	{
+		districts.push_back(greedy.greedyColoring(inputGraph));
+	}
 	foragersForDistrict = inputGraph.getMaxDegree();
-	districts.push_back(inputGraph);
-	Graph bestResult = districts[0];
+	Graph bestResult = *min_element(districts.begin(), districts.end(), comparator);
 	queue<Graph> scoutedDistricts;
 	while (iterationsLimit-- != 0)
 	{

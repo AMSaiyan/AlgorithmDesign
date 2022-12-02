@@ -7,6 +7,8 @@ Graph::Vertex::Vertex(int number, int colour, int degree) : number(number), colo
 
 bool Graph::verifyColor(int& verNum, int& colour)
 {
+	if (vertices[verNum].colour == colour)
+		return false;
 	if (colour == -1)
 		return true;
 	for (auto neighbour : vertices[verNum].neighbours)
@@ -78,11 +80,10 @@ void Graph::generateRandGraph()
 		if (maxDegree < vertices[i].degree)
 			maxDegree = vertices[i].degree;
 	}
-	//auto comparator = [this](Vertex left, Vertex right) 
-	//{
-	//	return left.degree > right.degree;
-	//};
-	//sort(vertices.begin(), vertices.end(), comparator);
+	for (auto vertex : vertices)
+	{
+		degree—onformity[vertex.degree].push_back(vertex.number);
+	}
 }
 
 bool Graph::changeColour(int verNum, int colour)
@@ -111,6 +112,11 @@ int Graph::getMaxDegree()
 	return maxDegree;
 }
 
+map<int, vector<int>> Graph::getDegree—onformity()
+{
+	return degree—onformity;
+}
+
 set<int>& Graph::getUsedColors()
 {
 	return usedColors;
@@ -121,4 +127,5 @@ void Graph::redefineUsedColors()
 	usedColors.clear();
 	for (auto vertex : vertices)
 		usedColors.insert(vertex.colour);
+	defineChromaticNum(usedColors.size());
 }

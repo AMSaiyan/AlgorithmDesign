@@ -13,18 +13,27 @@ void GreedyColorer::colorVer(Graph& graph, int verNum)
 
 void GreedyColorer::traversalGraph(Graph& graph)
 {
-	for (int i = 0; i < graph.getVertexAmount(); i++)
-		colorVer(graph, i);
+	int uncolored = graph.getVertexAmount();
+	int chosenVertex;
+	while (uncolored > 0)
+	{
+		chosenVertex = rand() % graph.getVertexAmount();
+		if (graph.getVertices()[chosenVertex].colour == -1)
+		{
+			colorVer(graph, chosenVertex);
+			uncolored--;
+		}
+	}
 }
 
 GreedyColorer::GreedyColorer() : usedColors(set<int>()){}
 
-int GreedyColorer::greedyColoring(Graph& graph)
+Graph GreedyColorer::greedyColoring(Graph graph)
 {
 	usedColors.clear();
 	if (graph.getVertexAmount() > 0)
 		traversalGraph(graph);
 	graph.defineChromaticNum(usedColors.size());
 	graph.getUsedColors() = GreedyColorer::usedColors;
-	return usedColors.size();
+	return graph;
 }

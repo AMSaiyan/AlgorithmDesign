@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ class Graph
 	int chromaticNum;
 	set<int> usedColors;
 	vector<Vertex> vertices;
+	map<int, vector<int>> degree—onformity;
 	bool verifyColor(int& verNum, int& colour);
 	void createEdge(int firstVer, int secondVer);
 	void defineDegree(int verNum);
@@ -35,6 +37,7 @@ public:
 	void defineChromaticNum(int usedColors);
 	int getVertexAmount();
 	int getMaxDegree();
+	map<int, vector<int>> getDegree—onformity();
 	set<int>& getUsedColors();
 	void redefineUsedColors();
 };

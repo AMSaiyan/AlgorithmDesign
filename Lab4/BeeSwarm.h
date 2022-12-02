@@ -9,7 +9,7 @@ class BeeSwarm
 	int foragers;
 	int foragersForDistrict;
 	vector<Graph> districts;
-	//void foragerCycle(int districtNum, int foragerAmount);
+	void foragerCycle(int districtNum, int foragerAmount);
 	queue<Graph> scoutCycle();
 public:
 	BeeSwarm(int iterationsLimit, int scouts, int foragers);
