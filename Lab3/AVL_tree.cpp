@@ -310,14 +310,16 @@ bool AVL_tree::deserialize(std::string path)
 		return false;
 	else
 	{
-		auto getData = [&path, &in](Node** currentNode) 
+		auto getData = [&path, &in](Node** currentNode)
 		{
 			int tempID;
 			int tempHeight;
-			size_t stringLength;
+			size_t stringLength = 0;
 			in.read(reinterpret_cast<char*>(&tempID), sizeof(tempID));
 			in.read(reinterpret_cast<char*>(&tempHeight), sizeof(tempHeight));
 			in.read(reinterpret_cast<char*>(&stringLength), sizeof(stringLength));
+			if (!stringLength)
+				return;
 			char* tempName = new char[stringLength];
 			in.read(tempName, stringLength);
 			in.read(reinterpret_cast<char*>(&stringLength), sizeof(stringLength));
@@ -327,8 +329,6 @@ bool AVL_tree::deserialize(std::string path)
 			{
 				*currentNode = nullptr;
 			}
-			else if (tempHeight == 0)
-			{}
 			else
 			{
 				*currentNode = new Node(tempID, Info(std::string(tempName), std::string(tempSurname)));
@@ -339,7 +339,7 @@ bool AVL_tree::deserialize(std::string path)
 		};
 		std::queue<Node**> breadth;
 		breadth.push(&root);
-		while (!in.eof())
+		while (!in.eof() && !breadth.empty())
 		{
 			Node** temp = breadth.front();
 			breadth.pop();
