@@ -37,6 +37,7 @@ public:
 	Node* balanceTree(Node* currentNode);
 	void showTree(Node* currentNode, int space = 0);
 	void deleteNodes(Node* currentNode);
+	void traversal(Node* current, std::vector<std::pair<int, Info>>& data);
 	friend class AVL_tree;
 };
 
@@ -54,4 +55,5 @@ public:
 	~AVL_tree();
 	bool serialize(std::string path);
 	bool deserialize(std::string path);
+	std::vector<std::pair<int, Info>> getAllNodes();
 };

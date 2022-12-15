@@ -14,7 +14,8 @@ int Node::getHeight(Node* currentNode)
 
 void Node::updateHeight(Node* currentNode)
 {
-	currentNode->height = std::max(getHeight(currentNode->left), getHeight(currentNode->right)) + 1;
+	if (currentNode)
+		currentNode->height = std::max(getHeight(currentNode->left), getHeight(currentNode->right)) + 1;
 }
 
 Node* Node::findSuccessor(Node* currentNode)
@@ -91,12 +92,11 @@ Node* Node::erase(Node* currentNode, int primaryKey, bool& result)
 			Node* successor = findSuccessor(currentNode->right);
 			currentNode->primaryKey = successor->primaryKey;
 			currentNode->row = successor->row;
-			currentNode = erase(currentNode->right, successor->primaryKey, result);
+			currentNode->right = erase(currentNode->right, successor->primaryKey, result);
 		}
 		else
 		{
-			Node* child = currentNode->left != nullptr ? currentNode->left : currentNode->right;
-			return child;
+			currentNode = currentNode->left != nullptr ? currentNode->left : currentNode->right;
 		}
 	}
 	updateHeight(currentNode);
@@ -353,6 +353,22 @@ bool AVL_tree::deserialize(std::string path)
 		in.close();
 		return true;
 	}
+}
+
+void Node::traversal(Node* current, std::vector<std::pair<int, Info>>& data)
+{
+	if (!current)
+		return;
+	traversal(current->left, data);
+	data.push_back(std::make_pair(current->primaryKey, current->row));
+	traversal(current->right, data);
+}
+
+std::vector<std::pair<int, Info>> AVL_tree::getAllNodes()
+{
+	std::vector<std::pair<int, Info>> data;
+	root->traversal(root, data);
+	return data;
 }
 
 bool operator==(Info& left, Info& right)
